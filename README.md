@@ -1,6 +1,14 @@
 #README
 
+##Warning
+This software is a toy! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake. Especially since I like to use functions like `memcpy()` a lot, which is considered bad practice. Basically, I believe this software to be secure, but don't trust it with your life!
+
+
 ##Installation Instructions
+
+This program runs on a unix-like system. It has no dependencies. For the cryptography, it uses the tweetnacl library:
+
+http://tweetnacl.cr.yp.to/
 
 
 1.use git to download the software
