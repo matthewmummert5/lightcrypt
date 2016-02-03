@@ -57,7 +57,7 @@ To decrypt base64 encoded data, use the following command
 echo "HlxvazjbQk6viAdLOEF+ImbB8cx95djNWSd5beVX3hEf/qzJaGQNTcLA93XcXgRFhgKX6rTOsnSu
 7BUmlsJEA/FbJuJ7Nec7Q0QQqyNda88BvDr9tzLcr5CQXiFGpp9omDtR1l6PwFarTx91dU2WNLy4
 WZ/mPZt772AA4KWGw/TXkhDf+5++cb5q4Idy3M90P+9N9fOWGQGG4Erg64pNROAXk+I++GmOeIaU
-jOn9vuDaLjRv" | base64 -d | ./lightcrypt -d MyKey.sec BobKey.sec
+jOn9vuDaLjRv" | base64 -d | ./lightcrypt -d MyKey.sec BobKey.pub
 ```
 
 
