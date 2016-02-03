@@ -10,18 +10,20 @@ This program runs on a unix-like system. It has no dependencies. For the cryptog
 
 http://tweetnacl.cr.yp.to/
 
-
-1.use git to download the software
+###Step 1
+Use git to download the software
 ```
 git clone https://github.com/matthewmummert5/lightcrypt.git
 ```
-2. cd into lightcrypt and create the object directory
+###Step 2
+cd into lightcrypt and create the object directory
 ```
 cd lightcrypt
 mkdir object
 ```
 
-3. Now we compile
+###Step 3
+Now we compile
 ```
 make all
 ```
