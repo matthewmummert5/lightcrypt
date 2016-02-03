@@ -3,9 +3,10 @@
 ##Installation Instructions
 
 
-1. exctract the lightcrypt.tar.gz to desired location
+1.use git to download the software
 ```
-tar -zxvf lightcrypt.tar.gz
+git clone https://github.com/matthewmummert5/lightcrypt.git
+mkdir object
 ```
 2. cd into lightcrypt
 ```
