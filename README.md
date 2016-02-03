@@ -6,11 +6,11 @@
 1.use git to download the software
 ```
 git clone https://github.com/matthewmummert5/lightcrypt.git
-mkdir object
 ```
-2. cd into lightcrypt
+2. cd into lightcrypt and create the object directory
 ```
 cd lightcrypt
+mkdir object
 ```
 
 3. Now we compile
