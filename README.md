@@ -38,7 +38,7 @@ lightcrypt <Command> <Your Secret Keyfile> <Their Public Keyfile>
 
 ###Getting Started
 
-First, you must generate your keys.This action will generate two files. One of them will be a `.sec` file, and the other will be a `.pub` file. Send your friend the `.pub` file, but make sure you PROTECT YOUR `.sec` FILES WITH YOUR LIFE
+First, you must generate your keys. This action will generate two files. One of them will be a `.sec` file, and the other will be a `.pub` file. Send your friend the `.pub` file, but make sure you PROTECT YOUR `.sec` FILES WITH YOUR LIFE
 ```
 ./lightcrypt -keygen
 ```
