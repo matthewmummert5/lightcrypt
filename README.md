@@ -1,7 +1,7 @@
 #README
 
 ##Warning
-This software is a toy! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake. Especially since I like to use functions like `memcpy()` a lot, which is considered bad practice. Basically, I believe this software to be secure, but don't trust it with your life!
+THIS SOFTWARE IS A TOY! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake - especially since I like to use functions like `memcpy()` and `malloc()` a lot. Basically, I believe this software to be secure, but then, I'm an an electrical engineer trying to write crypto. You have been warned!
 
 
 ##Installation Instructions
