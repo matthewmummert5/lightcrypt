@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -c -Wall
 
 
-INCLUDES = -I include/ -I nacl/include/amd64
+INCLUDES = -I include/
 
 OBJECTS =	$(OBJDIR)/main.o	\
 		$(OBJDIR)/lock.o	\

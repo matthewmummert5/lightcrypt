@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
 			BobKeyFile = fopen(argv[3], "rb");
 			if(NULL == BobKeyFile)
 			{
-				printf("Cannot open file: %s\n", argv[2]);
+				printf("Cannot open file: %s\n", argv[3]);
 				return 1;
 			}
 
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 			AliceKeyFile = fopen(argv[2], "rb");
 			if(NULL == AliceKeyFile)
 			{
-				printf("Cannot open file: %s\n", argv[3]);
+				printf("Cannot open file: %s\n", argv[2]);
 				return 1;
 			}
 
