@@ -52,8 +52,8 @@ First, you must generate your keys. This action will generate two files. One of 
 If you wish to rename your files to something easier to keep track of, then do so.
 
 ####Encryption
-To encrypt or decrypt messages with lightcrypt, you must pass in the proper command line arguments in the right order. Here is an example of how to encrypt messages that you want to send Bob. Here we specify an output file named `secretmessage`
-```
+To encrypt or decrypt messages with lightcrypt, you must pass in the proper command line arguments in the correct order. Here is an example of how to encrypt messages that you want to send Bob. Here we specify an output file named `secretmessage`
+```bash
 echo "This is a test message" | ./lightcrypt -e MyKey.sec BobKey.pub secretmessage
 ```
 Optionally, you don't have to use an output file. If you don't specify one, any output will be directed to `stdout`. Here is an example of not using an output file, but piping the output to the `base64` command instead.
