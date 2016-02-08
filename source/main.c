@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 
 	FILE* AliceKeyFile;					//file containing Alice's keys
 	FILE* BobKeyFile;					//file containing Bob's keys
+	FILE* OutputFile;					//optional output file
 
 	unsigned char plaintext[MAX_INPUT];	//the plaintext message to be encrypted
 	unsigned long long mlength;			//the length of the plaintest message
@@ -150,9 +151,34 @@ int main(int argc, char *argv[])
 				return 1;
 			}
 
-			//write the ciphertext to stdout
-			fwrite(ciphertext, sizeof(unsigned char), lmlen, stdout);
+			//Check to see if user specified an output file
+			if(NULL == argv[4])
+			{
+				//The user did not specify an output file
+				//route output to stdout instead
+				fwrite(ciphertext, sizeof(unsigned char), lmlen, stdout);
+			}
 
+			else
+			{
+				OutputFile = fopen(argv[4], "wb");
+				if(NULL == OutputFile)
+				{
+					//could not properly open the output file
+					//print an error and return error code 1
+					printf("Could not open output file\n");
+					return 1;
+				}
+				//wite the ciphertext to the ouput file
+				fwrite(ciphertext, sizeof(unsigned char), lmlen, OutputFile);
+
+
+				fclose(OutputFile);
+
+			}
+
+			
+			//close the keyfiles
 			fclose(AliceKeyFile);
 			fclose(BobKeyFile);
 
@@ -224,8 +250,32 @@ int main(int argc, char *argv[])
 				//This could be a man in the middle attack
 				return 1;
 			}
-			//write the plaintext to stdout
-			fwrite(plaintext, sizeof(unsigned char), mlength, stdout);
+
+			//Check to see if user specified an output file
+			if(NULL == argv[4])
+			{
+				//The user did not specify an output file
+				//route output to stdout instead
+				fwrite(plaintext, sizeof(unsigned char), mlength, stdout);
+			}
+
+			else
+			{
+				OutputFile = fopen(argv[4], "wb");
+				if(NULL == OutputFile)
+				{
+					//could not properly open the output file
+					//print an error and return error code 1
+					printf("Could not open output file\n");
+					return 1;
+				}
+				//wite the plaintext to the ouput file
+				fwrite(plaintext, sizeof(unsigned char), mlength, OutputFile);
+
+
+				fclose(OutputFile);
+
+			}
 
 			fclose(AliceKeyFile);
 			fclose(BobKeyFile);

@@ -5,10 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*	The purpose of this function is to lock a message. First, it signes the plaintext with the sender's identity key using NaCl's crypto_sign(), then it authenticates and encrypts the signed message with NaCl's crypto_box() function
+/*	The purpose of this function is to lock a message. First, it signes the plaintext with the sender's identity key using NaCl's crypto_sign(), 
+*	then it authenticates and encrypts the signed message with NaCl's crypto_box() function
 *	Then, it arranges the message to the following format:
 *
-*							nonce||sender's ephemeral public key || MAC || ciphertext(signed plaintext message)
+*		nonce||sender's ephemeral public key || MAC || ciphertext(signed plaintext message)
 *
 *	This function returns -1 on error
 */
