@@ -6,7 +6,7 @@
 #include <inits.h>
 #include <tweetnacl.h>
 
-#define MAX_INPUT 16384
+#define MAX_INPUT 24576
 
 //A function for getting what the user passed in from stdin
 unsigned long long get_stdin(unsigned char* input, FILE* infile);

@@ -38,7 +38,7 @@ lightcrypt <Command> <Your Secret Keyfile> <Their Public Keyfile> <Optional Outp
 
 If the user does not specify an output file, then the output will be directed to `stdout`.
 
-Users should also be aware that the maximum input size for lightcrypt is currently set at 16384 bytes. In the future, the program will use allocate memory on the heap with `malloc()` to allow inputs of theoretically unlimited size.
+Users should also be aware that the maximum input size for lightcrypt is currently set at 24576 bytes (24kB). In the future, the program will use allocate memory on the heap with `malloc()` to allow inputs of theoretically unlimited size.
 
 ###Getting Started
 
