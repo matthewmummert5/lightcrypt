@@ -98,7 +98,7 @@ If you know that the the message will decrypt to a text output, then you don't n
 
 
 ####Notes for Bash Scripting
-This program is designed to be easily bash scripted. the `--script` command line option will supress error messages printing to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
+This program is designed to be easily bash scripted. The `--script` command line option will supress error messages printing to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
 
 Some examples:
 
