@@ -1,31 +1,31 @@
 #README
 
 ##Warning
-THIS SOFTWARE IS A TOY! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake - especially since I like to use functions like `memcpy()` and `malloc()` a lot. Basically, I believe this software to be secure, but then, I'm an electrical engineer trying to write crypto. You have been warned!
+THIS SOFTWARE IS A TOY! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake. Basically, I believe this software to be secure, but then, I'm an electrical engineer trying to write crypto. You have been warned!
 
 
 ##Installation Instructions
 
-This program runs on a unix-like system. It has no dependencies. For the cryptography, it uses the tweetnacl library:
+This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. It's only dependency besides `gcc` for compiling is `libsodium`. 
 
-http://tweetnacl.cr.yp.to/
-
-###Step 1
+###Step 1: Install Dependencies and download software
 Use git to download the software
 ```bash
+#On Debian-based systems, the libsodium library is available in the libsodium-dev package
+sudo apt-get install libsodium-dev
 git clone https://github.com/matthewmummert5/lightcrypt.git
 ```
-###Step 2
-cd into lightcrypt and create the object directory
+###Step 2: Compile
+cd into the lightcrypt directory and compile with `gcc`.
 ```bash
 cd lightcrypt
-mkdir object
+gcc -lsodium -o lightcrypt lightcrypt.c
 ```
 
-###Step 3
-Now we compile
+###Step 3 (Optional)
+If you want to be able to invoke the `lightcrypt` command from anywhere, you should put the executable in the appropriate system directory
 ```bash
-make all
+sudo cp lightcrypt /usr/bin
 ```
 
 
@@ -33,18 +33,31 @@ make all
 
 ##Usage Instructions
 ```bash
-lightcrypt <Command> <Your Secret Keyfile> <Their Public Keyfile> <Optional Output File>
+lightcrypt <Command> -in <Input File> -o <Output File> -pub <Recipient's Public Key File> -sec <Sender's Secret Key File>
 ```
 
-If the user does not specify an output file, then the output will be directed to `stdout`.
+If the user does not specify an output file, then the output will be directed to `stdout`. Similarly, if the user fails to specify an input file, the program will read from `stdin`.
 
-Users should also be aware that the maximum input size for lightcrypt is currently set at 24576 bytes (24kB). In the future, the program will use allocate memory on the heap with `malloc()` to allow inputs of theoretically unlimited size.
+Users should also be aware that this program is optimized for speed and makes no attempt whatsoever to be memory efficient. You'll need at least 2 times as much RAM available as the size of the file you want to encrypt or decrypt.
+
+The optional `--script` command line argument will put the program in script mode. This means that no error messages will output to the console, but the program will still return a value that you can check with the `$?` variable in `bash`.
+
+####Program Return Values and Their Meanings
+
+| Return Value | Meaning                             |
+| ------------ | ----------------------------------- |
+| 0            | The program executed without errors |
+| 1            | Cryptographic verification failed   |
+| 2            | Invalie command line arguments      |
+| 3            | File I/O error                      |
+| 4            | Invalid public key                  |
+| 5            | Not enough memory available         |
 
 ###Getting Started
 
 
 ####Key Generation
-First, you must generate your keys. This action will generate two files. One of them will be a `.sec` file, and the other will be a `.pub` file. Send your friend the `.pub` file, but make sure you PROTECT YOUR `.sec` FILES WITH YOUR LIFE. If an attacker obtains your `.sec` file, then they can decrypt anything that has ever been encrypted to you and impersonate you in the future.
+First, you must generate your keys. This action will generate two files. One of them will be a `MyKey.sec` file, and the other will be a `MyKey.pub` file. Send your friend the `.pub` file, but make sure you PROTECT YOUR `.sec` FILES WITH YOUR LIFE. If an attacker obtains your `.sec` file, then they can decrypt anything that has ever been encrypted to you and impersonate you in the future.
 ```bash
 ./lightcrypt -keygen
 ```
@@ -52,42 +65,58 @@ First, you must generate your keys. This action will generate two files. One of 
 If you wish to rename your files to something easier to keep track of, then do so.
 
 ####Encryption
-To encrypt or decrypt messages with lightcrypt, you must pass in the proper command line arguments in the correct order. Here is an example of how to encrypt messages that you want to send Bob. Here we specify an output file named `secretmessage`
+Here is an example of how to encrypt messages that you want to send to Bob.
 ```bash
-echo "This is a test message" | ./lightcrypt -e MyKey.sec BobKey.pub secretmessage
+./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -in plaintext_file -o ciphertext_file
 ```
-Optionally, you don't have to use an output file. If you don't specify one, any output will be directed to `stdout`. Here is an example of not using an output file, but piping the output to the `base64` command instead.
+Optionally, you don't have to use an input file. If you don't specify one, any input will be captured from `stdin` instead. Here is an example of not using an input file. 
 
 ```bash
-echo "This is a test message" | ./lightcrypt -e MyKey.sec BobKey.pub | base64
+echo "This is a test message" | ./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -o ciphertext_file
 ```
 
-The user should be aware that they will not see any error messages if they pipe the output of lightcrypt to another program, so this is not recommended unless you know what you're doing. The user should NEVER directly pipe the output of lightcrypt to another program when decrypting!
+
 
 ####Decryption
-
-Here is an example of how to decrypt and verify a message from Bob. Here we specify an output file `decryptedmessage`
+Here is an example of how to decrypt and verify messages from Bob.
 ```bash
-cat secretmessage | ./lightcrypt -d MyKey.sec BobKey.pub decryptedmessage
+./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -in ciphertext_file -o decryptedmessage
+```
+
+
+Here is an example of how to decrypt and verify a message from Bob without speciying an input file.
+```bash
+cat ciphertext_file | ./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -o decryptedmessage
 ```
 If you know that the the message will decrypt to a text output, then you don't need to specify an output file. The output will print to `stdout` instead and display on the terminal.
 
 ```bash
-cat secretmessage | ./lightcrypt -d MyKey.sec BobKey.pub
+./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -in ciphertext_file
 ```
 
 
-To decrypt base64 encoded data, use the following command
+
+
+####Notes for Bash Scripting
+This program is designed to be easily bash scripted. the `--script` command line option will supress outputing error messages to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
+
+Some examples:
+
 ```bash
-echo "HlxvazjbQk6viAdLOEF+ImbB8cx95djNWSd5beVX3hEf/qzJaGQNTcLA93XcXgRFhgKX6rTOsnSu
-7BUmlsJEA/FbJuJ7Nec7Q0QQqyNda88BvDr9tzLcr5CQXiFGpp9omDtR1l6PwFarTx91dU2WNLy4
-WZ/mPZt772AA4KWGw/TXkhDf+5++cb5q4Idy3M90P+9N9fOWGQGG4Erg64pNROAXk+I++GmOeIaU
-jOn9vuDaLjRv" | base64 -d | ./lightcrypt -d MyKey.sec BobKey.pub
+#If you know the output of a decryption will be text, you can capture it in a bash variable like this
+variable=$(./lightcrypt --script -d -in encrypted_message -sec MyKey.sec -pub BobKey.pub)
+
+#Don't forget to check for any errors
+error_code=$?
+
+if [ $error_code -eq 0 ]; then
+   #Decryption was successful
+
+else
+	#Handle the errors
+fi
+
 ```
-
-NEVER directly pipe the output of lightcrypt to another program while decrypting a message. No error messages will be displayed and you will have no way of knowing if the MAC or signature failed verification!
-
-
 
 
 
