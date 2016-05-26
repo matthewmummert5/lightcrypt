@@ -6,7 +6,7 @@ THIS SOFTWARE IS A TOY! I wrote it as part of a fun project so that I could have
 
 ##Installation Instructions
 
-This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. It's only dependency besides `gcc` for compiling is `libsodium`. 
+This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. Its only dependency besides `gcc` for compiling is `libsodium`. 
 
 ###Step 1: Install Dependencies and download software
 Use git to download the software
@@ -40,7 +40,7 @@ If the user does not specify an output file, then the output will be directed to
 
 Users should also be aware that this program is optimized for speed and makes no attempt whatsoever to be memory efficient. You'll need at least 2 times as much RAM available as the size of the file you want to encrypt or decrypt.
 
-The optional `--script` command line argument will put the program in script mode. This means that no error messages will output to the console, but the program will still return a value that you can check with the `$?` variable in `bash`.
+The optional `--script` command line argument will put the program in script mode. This means that no error messages will output to the console, but the program will still return a value that you can check with the `$?` variable in bash.
 
 ####Program Return Values and Their Meanings
 
@@ -48,7 +48,7 @@ The optional `--script` command line argument will put the program in script mod
 | ------------ | ----------------------------------- |
 | 0            | The program executed without errors |
 | 1            | Cryptographic verification failed   |
-| 2            | Invalie command line arguments      |
+| 2            | Invalid command line arguments      |
 | 3            | File I/O error                      |
 | 4            | Invalid public key                  |
 | 5            | Not enough memory available         |
@@ -98,7 +98,7 @@ If you know that the the message will decrypt to a text output, then you don't n
 
 
 ####Notes for Bash Scripting
-This program is designed to be easily bash scripted. the `--script` command line option will supress outputing error messages to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
+This program is designed to be easily bash scripted. the `--script` command line option will supress error messages printing to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
 
 Some examples:
 
