@@ -1,8 +1,11 @@
 #README
 
-##Warning
-THIS SOFTWARE IS A TOY! I wrote it as part of a fun project so that I could have my BeagleBone and Raspberry Pi send encrypted and authenticated messages to each other. I released it in case someone else finds it useful. Cryptography is hard, and I may have made a mistake. Basically, I believe this software to be secure, but then, I'm an electrical engineer trying to write crypto. You have been warned!
+##Purpose
 
+This encryption software is designed to be easily used within a bash script. It's original purpose was to add drop-in authenticated encryption functionality to communication scripts.
+
+##Warning
+This software does not offer forward secrecy. If an attacker obtains your private key, they can decrypt every message ever sent to you and impersonate you in the future.
 
 ##Installation Instructions
 
