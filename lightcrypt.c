@@ -666,7 +666,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
 
         }
 
-        //Public Key file is specified with "-pub" and the next argument will be the name of the secret key file
+        //Public Key file is specified with "-pub" and the next argument will be the name of the public key file
         else if(strncmp("-pub", argv[i], 2) == 0) 
         {
             if(NULL != argv[i + 1])
