@@ -177,6 +177,15 @@ int main(int argc, char* argv[])
             //Error with opening and/or reading file
             //Return error code 3
             print_error("Error opening and/or reading public keyfile");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 3;
         }
 
@@ -186,6 +195,15 @@ int main(int argc, char* argv[])
             //self-signature on public keyfile is invalid
             //Return error code 4
             print_error("Self-signature on public keyfile is invalid");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 4;
         }
 
@@ -197,6 +215,15 @@ int main(int argc, char* argv[])
             //Error with opening and/or reading file
             //Return error code 3
             print_error("Error opening and/or reading secret keyfile\n");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 3;
         }
 
@@ -210,6 +237,15 @@ int main(int argc, char* argv[])
             if(NULL == inputFile_fp)
             {
                 print_error("Error with input file\n");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 3;
             }
 
@@ -227,6 +263,15 @@ int main(int argc, char* argv[])
                 //Error reserving memory
                 //Return error code 5
                 print_error("Error reserving memory for the plaintext");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 5;
             }
 
@@ -247,6 +292,15 @@ int main(int argc, char* argv[])
             {
                 //Error reserving memory
                 //Return error code 5
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 5;
             }
 
@@ -338,6 +392,15 @@ int main(int argc, char* argv[])
             //Error with opening and/or reading file
             //Return error code 3
             print_error("Error opening and/or reading public keyfile");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 3;
         }
 
@@ -347,6 +410,15 @@ int main(int argc, char* argv[])
             //self-signature on public keyfile is invalid
             //Return error code 4
             print_error("Self-signature on public keyfile is invalid");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 4;
         }
 
@@ -358,6 +430,15 @@ int main(int argc, char* argv[])
             //Error with opening and/or reading file
             //Return error code 3
             print_error("Error opening and/or reading secret keyfile\n");
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
             return 3;
         }
 
@@ -369,6 +450,15 @@ int main(int argc, char* argv[])
             if(NULL == inputFile_fp)
             {
                 print_error("Error with input file\n");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 3;
             }
 
@@ -386,6 +476,15 @@ int main(int argc, char* argv[])
                 //Error reserving memory
                 //Return error code 5
                 print_error("Error reserving memory for the ciphertext");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 5;
             }
 
@@ -408,6 +507,15 @@ int main(int argc, char* argv[])
                 //Error reserving memory
                 //Return error code 5
                 print_error("Error reserving memory for the ciphertext");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 5;
             }
 
@@ -505,6 +613,15 @@ int main(int argc, char* argv[])
             if(0 != error_check)
             {
                 print_error("Error generating key files");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 3;
             }
         }
@@ -516,6 +633,15 @@ int main(int argc, char* argv[])
             if(0 != error_check)
             {
                 print_error("Error generating key files");
+                sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+                sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+                sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+                sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+                sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+                sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+                sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+                sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+                sodium_memzero(input_data, sizeof(input_data));
                 return 3;
             }
         }
