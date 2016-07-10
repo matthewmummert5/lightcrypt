@@ -91,7 +91,7 @@ Here is an example of how to decrypt and verify a message from Bob without speci
 ```bash
 cat ciphertext_file | ./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -o decryptedmessage
 ```
-If you know that the the message will decrypt to a text output, then you don't need to specify an output file. The output will print to `stdout` instead and display on the terminal.
+If you know that the message will decrypt to a text output, then you don't need to specify an output file. The output will print to `stdout` instead and display on the terminal.
 
 ```bash
 ./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -in ciphertext_file
