@@ -5,7 +5,7 @@
 *   This code is licensed under the MIT Open Source License:
 *   https://opensource.org/licenses/MIT
 *
-*   Permission is hereby granted, free of charge, to any person obtaining 
+*   Permission is hereby granted, free of charge, to any person obtaining
 *   a copy of this software and associated documentation files (the "Software"),
 *   to deal in the Software without restriction, including without limitation
 *   the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -87,7 +87,7 @@ int loadSecretKeyFromFile(char* KeyFile, unsigned char* SecretCryptKey, unsigned
 
 
 //This function locks a plaintext message. It first derives the symmetric key
-//by performing a signature authenticated Diffie-Hellman key exchange, then 
+//by performing a signature authenticated Diffie-Hellman key exchange, then
 //encrypts and authenticates the plaintext with chacha20-poly1305
 int lock_message(unsigned char* ciphertext,
             unsigned long long* ciphertext_len,
@@ -119,23 +119,18 @@ int main(int argc, char* argv[])
 
     unsigned char Recipient_publicSignKey[crypto_sign_PUBLICKEYBYTES];
     unsigned char Recipient_secretSignKey[crypto_sign_SECRETKEYBYTES];
-    
+
 
     unsigned char input_data[40000];
 
     unsigned char* ciphertext;
     unsigned char* plaintext;
 
-    unsigned long long mlength; //the length of the plaintext message
-
     char outputFile[128];
     FILE* outputFile_fp;
 
     char inputFile[128];
     FILE* inputFile_fp;
-
-    FILE* Sender_KeyFile_fp;
-    FILE* Recipient_KeyFile_fp;
 
     char Secret_Keyfile[128];
     char Public_Keyfile[128];
@@ -163,7 +158,7 @@ int main(int argc, char* argv[])
         print_error("Error with command line arguments");
         return 2;
     }
-    
+
 
 
     //Encrypt Mode
@@ -256,7 +251,7 @@ int main(int argc, char* argv[])
 
             //Reserve some memory on the heap for the plaintext
             plaintext = calloc(plaintext_len, sizeof(char));
-            
+
             //Check to make sure memory allocation was successful
             if(NULL == plaintext)
             {
@@ -286,7 +281,7 @@ int main(int argc, char* argv[])
 
             //Reserve some memory on the heap for the plaintext
             plaintext = calloc(plaintext_len, sizeof(char));
-            
+
             //Check to make sure memory allocation was successful
             if(NULL == plaintext)
             {
@@ -311,7 +306,7 @@ int main(int argc, char* argv[])
 
         //Reserve some memory on the heap for the ciphertext. We need 112 bytes more than the plaintext for the ciphertext
         ciphertext = calloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_ABYTES, sizeof(char));
-            
+
         //Check to make sure memory allocation was successful
         if(NULL == ciphertext)
         {
@@ -331,7 +326,7 @@ int main(int argc, char* argv[])
             free(plaintext);
             return 5;
         }
-    
+
 
         //Sign, encrypt, and authenticate the plaintext
         lock_message(ciphertext, &ciphertext_len, plaintext, plaintext_len, Recipient_publicKey, Sender_secretSignKey);
@@ -377,7 +372,7 @@ int main(int argc, char* argv[])
         sodium_memzero(ciphertext, ciphertext_len);
         free(plaintext);
         free(ciphertext);
-        
+
 
     }
 
@@ -469,7 +464,7 @@ int main(int argc, char* argv[])
 
             //Reserve some memory on the heap for the ciphertext.
             ciphertext = calloc(ciphertext_len, sizeof(char));
-            
+
             //Check to make sure memory allocation was successful
             if(NULL == ciphertext)
             {
@@ -557,7 +552,7 @@ int main(int argc, char* argv[])
             print_error("Cryptographic Verification failed");
             return 1;
         }
-    
+
         //If an output file is specified, write to it
         if((OUTFILE_SPECIFIED & mode) == OUTFILE_SPECIFIED)
         {
@@ -646,7 +641,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        
+
     }
 
     //Zero all cryptographic variables
@@ -695,7 +690,6 @@ uint32_t parse_commandline_args(int argc, char* argv[],
                                 char* Secret_Keyfile)
 {
     int i;
-    char** endptr;
     uint32_t mask = 0;
     uint32_t temp = 0;
 
@@ -743,7 +737,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
 
         //Output file is specified with '-o' and the next argument will be the name of the outfile
         //If no output file is specified, the program will output to stdout
-        else if(strncmp("-o", argv[i], 2) == 0) 
+        else if(strncmp("-o", argv[i], 2) == 0)
         {
             if(NULL != argv[i + 1])
             {
@@ -788,12 +782,12 @@ uint32_t parse_commandline_args(int argc, char* argv[],
             //prevent the loop from examining the next command line argument.
             //We don't need to because that's the name of the input file
             i++;
-            
+
 
         }
 
         //Public Key file is specified with "-pub" and the next argument will be the name of the public key file
-        else if(strncmp("-pub", argv[i], 2) == 0) 
+        else if(strncmp("-pub", argv[i], 2) == 0)
         {
             if(NULL != argv[i + 1])
             {
@@ -817,7 +811,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
         }
 
         //Secret Key file is specified with "-sec" and the next argument will be the name of the secret key file
-        else if(strncmp("-sec", argv[i], 2) == 0) 
+        else if(strncmp("-sec", argv[i], 2) == 0)
         {
             if(NULL != argv[i + 1])
             {
@@ -866,10 +860,10 @@ uint32_t parse_commandline_args(int argc, char* argv[],
             print_error("Missing Keyfiles");
             return 0xFFFFFFFF;
         }
-        
+
     }
 
-    
+
     return mask;
 }
 
@@ -878,7 +872,7 @@ unsigned long long get_stdin(unsigned char* input, FILE* infile)
     int temp;
     unsigned long long length = 0;
 
-    
+
     //We need to get input from stdin, byte for byte, even if the input is random data
     //There has to be a cleaner way to do this, but this works for now
     while(1)
@@ -912,7 +906,7 @@ int keyFileGen(char* PK_filename, char* SK_filename)
     unsigned long long mlen = crypto_box_PUBLICKEYBYTES + crypto_sign_PUBLICKEYBYTES;
 
     unsigned char sig[crypto_sign_BYTES];
-    
+
     //the total public key, including the encryption public key, signature public key, and the signature
     unsigned char totalKey_pk[crypto_box_PUBLICKEYBYTES + crypto_sign_PUBLICKEYBYTES + crypto_sign_BYTES];
 
@@ -922,16 +916,13 @@ int keyFileGen(char* PK_filename, char* SK_filename)
     //temporary buffer
     unsigned char temp[crypto_box_PUBLICKEYBYTES + crypto_sign_PUBLICKEYBYTES];
 
-    char PK_filenameTEMP[128];
-    char SK_filenameTEMP[128];
-
     FILE* public_fp;    //file for public key
     FILE* secret_fp;    //file for secret key
-    
+
     sodium_memzero(totalKey_pk, sizeof(totalKey_pk));   //clear the public key buffer
     sodium_memzero(totalKey_sk, sizeof(totalKey_sk));   //clear the secret key buffer
     sodium_memzero(temp, sizeof(temp));                 //clear the temp buffer
-    
+
     crypto_box_keypair(myKey_public, myKey_secret); //generate the encryption keypair
     crypto_sign_keypair(myID_public, myID_secret);  //generate the signature keypair
 
@@ -944,7 +935,7 @@ int keyFileGen(char* PK_filename, char* SK_filename)
     memcpy(temp, myKey_public, crypto_box_PUBLICKEYBYTES);
     memcpy(temp + crypto_box_PUBLICKEYBYTES, myID_public, crypto_sign_PUBLICKEYBYTES);
 
-    
+
     //put the secret encryption key, followed by the secret signature key, into the totalKey_sk buffer
     memcpy(totalKey_sk, myKey_secret, crypto_box_SECRETKEYBYTES);
     memcpy(totalKey_sk + crypto_box_SECRETKEYBYTES, myID_secret, crypto_sign_SECRETKEYBYTES);
@@ -977,13 +968,13 @@ int keyFileGen(char* PK_filename, char* SK_filename)
     //write the public and secret keys to their files
     fwrite(totalKey_pk, sizeof(unsigned char), sizeof(totalKey_pk), public_fp);
     fwrite(totalKey_sk, sizeof(unsigned char), crypto_box_SECRETKEYBYTES + crypto_sign_SECRETKEYBYTES, secret_fp);
-    
+
     fclose(public_fp);  //close the public key file
     fclose(secret_fp);  //close the secret key file
 
     sodium_memzero(totalKey_pk, sizeof(totalKey_pk));   //clear the public key buffer
     sodium_memzero(totalKey_sk, sizeof(totalKey_sk));   //clear the secret key buffer
-    
+
     return 0;
 
 }
@@ -1034,13 +1025,13 @@ int loadPublicKeyFromFile(char* KeyFile, unsigned char* PublicCryptKey, unsigned
     //Copy it into the variable called 'PublicSignKey'
     memcpy(PublicSignKey, buffer + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES, crypto_sign_PUBLICKEYBYTES);
 
-    
+
     //dump(PublicCryptKey, "\nPublicCryptKey", crypto_sign_PUBLICKEYBYTES);
     //dump(PublicSignKey, "\nPublicSignKey", crypto_sign_PUBLICKEYBYTES);
 
     //Verify the self-signature on the keyfile
     return crypto_sign_verify_detached(signature, buffer + crypto_sign_BYTES, crypto_box_PUBLICKEYBYTES + crypto_sign_PUBLICKEYBYTES, PublicSignKey);
-    
+
 }
 
 
@@ -1129,8 +1120,6 @@ int lock_message(unsigned char* ciphertext,
 
     int error_check;
 
-    unsigned char buffer[1024];
-
     //state of the hash function
     crypto_generichash_state state;
 
@@ -1179,7 +1168,7 @@ int lock_message(unsigned char* ciphertext,
     //half from memory to prevent side-channel leaks
     sodium_memzero(ephemeral_secretKey, sizeof(ephemeral_secretKey));
 
-    
+
     //This function uses the ChaCha20 stream cipher to encrypt the plaintext.
     //It also uses poly1305 to authenticate the ciphertext and Alice's signed ephemeral Diffie-Hellman public key
     crypto_aead_chacha20poly1305_encrypt(ciphertext + sizeof(ephemeral_publicKey_signed),
@@ -1222,7 +1211,7 @@ int unlock_message(unsigned char* plaintext,
 {
     //ephemeral Diffie-Hellman keypair to be generated on-the-fly
     unsigned char ephemeral_publicKey[crypto_box_PUBLICKEYBYTES];
-    
+
     //Bob's Diffie-Hellman public key. This will be calculated from his secret key
     unsigned char Bob_publicKey[crypto_box_PUBLICKEYBYTES];
 
@@ -1231,9 +1220,6 @@ int unlock_message(unsigned char* plaintext,
 
     //The detached signature of Alice's ephemeral Diffie-Hellman keypair
     unsigned char signature[crypto_sign_BYTES];
-
-    //length of the signature on Alice's ephemeral Diffie-Hellman keypair
-    unsigned long long siglen;
 
     //shared secret key calculated from Diffie-Hellman Key Exchange
     unsigned char sharedKey[crypto_aead_chacha20poly1305_KEYBYTES];
@@ -1249,7 +1235,7 @@ int unlock_message(unsigned char* plaintext,
     //state of the hash function
     crypto_generichash_state state;
 
-    
+
     //Compute Bob's public key given his secret key that we passed in
     crypto_scalarmult_base(Bob_publicKey, Bob_secretKey);
 
@@ -1316,4 +1302,3 @@ int unlock_message(unsigned char* plaintext,
 
     return error_check;
 }
-
