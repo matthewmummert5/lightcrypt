@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
         }
 
         //Reserve some memory on the heap for the ciphertext. We need 112 bytes more than the plaintext for the ciphertext
-        ciphertext = calloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_ABYTES, sizeof(char));
+        ciphertext = calloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_IETF_ABYTES, sizeof(char));
 
         //Check to make sure memory allocation was successful
         if(NULL == ciphertext)
@@ -1110,10 +1110,10 @@ int lock_message(unsigned char* ciphertext,
     unsigned long long siglen;
 
     //shared secret key calculated from Diffie-Hellman Key Exchange
-    unsigned char sharedKey[crypto_aead_chacha20poly1305_KEYBYTES];
+    unsigned char sharedKey[crypto_aead_chacha20poly1305_IETF_KEYBYTES];
 
     //nonce for the ChaCha20 encryption algorithm
-    unsigned char nonce[crypto_aead_chacha20poly1305_NPUBBYTES];
+    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES];
 
     //BLAKE2b hash buffer
     unsigned char hash[crypto_generichash_BYTES_MIN];
@@ -1146,12 +1146,12 @@ int lock_message(unsigned char* ciphertext,
 
 
     //Here we take the result of the BLAKE2b hash of Alice's and Bob's public keys
-    //and use the first crypto_aead_chacha20poly1305_NPUBBYTES bytes of it as
+    //and use the first crypto_aead_chacha20poly1305_IETF_NPUBBYTES bytes of it as
     //the chacha20 nonce.
     //This will result in always using the same nonce with the same key,
     //but this is acceptable because Alice's Diffie-Hellman keys are always
     //ephemeral. Therefore the key will never be the same for two messages
-    memcpy(nonce, hash, crypto_aead_chacha20poly1305_NPUBBYTES);
+    memcpy(nonce, hash, crypto_aead_chacha20poly1305_IETF_NPUBBYTES);
 
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
@@ -1171,7 +1171,7 @@ int lock_message(unsigned char* ciphertext,
 
     //This function uses the ChaCha20 stream cipher to encrypt the plaintext.
     //It also uses poly1305 to authenticate the ciphertext and Alice's signed ephemeral Diffie-Hellman public key
-    crypto_aead_chacha20poly1305_encrypt(ciphertext + sizeof(ephemeral_publicKey_signed),
+    crypto_aead_chacha20poly1305_ietf_encrypt(ciphertext + sizeof(ephemeral_publicKey_signed),
                                         ciphertext_len,
                                         plaintext,
                                         plaintext_len,
@@ -1222,10 +1222,10 @@ int unlock_message(unsigned char* plaintext,
     unsigned char signature[crypto_sign_BYTES];
 
     //shared secret key calculated from Diffie-Hellman Key Exchange
-    unsigned char sharedKey[crypto_aead_chacha20poly1305_KEYBYTES];
+    unsigned char sharedKey[crypto_aead_chacha20poly1305_IETF_KEYBYTES];
 
     //nonce for the ChaCha20 encryption algorithm
-    unsigned char nonce[crypto_aead_chacha20poly1305_NPUBBYTES];
+    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES];
 
     //BLAKE2b hash buffer
     unsigned char hash[crypto_generichash_BYTES_MIN];
@@ -1261,12 +1261,12 @@ int unlock_message(unsigned char* plaintext,
     crypto_generichash_final(&state, hash, sizeof(hash));
 
     //Here we take the result of the BLAKE2b hash of Alice's and Bob's public keys
-    //and use the first crypto_aead_chacha20poly1305_NPUBBYTES bytes of it as
+    //and use the first crypto_aead_chacha20poly1305_IETF_NPUBBYTES bytes of it as
     //the chacha20 nonce.
     //This will result in always using the same nonce with the same key,
     //but this is acceptable because Alice's Diffie-Hellman keys are always
     //ephemeral. Therefore the key will never be the same for two messages
-    memcpy(nonce, hash, crypto_aead_chacha20poly1305_NPUBBYTES);
+    memcpy(nonce, hash, crypto_aead_chacha20poly1305_IETF_NPUBBYTES);
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
     //and computes the shared secret key to be used by Alice and Bob
@@ -1281,7 +1281,7 @@ int unlock_message(unsigned char* plaintext,
 
     //This function verifies the poly1305 MAC computed over Alice's signed ephemeral Diffie-Hellman public key
     //and the ciphertext, then it decrypts the ChaCha20 encrypted message. It returns -1 if verification fails
-    error_check = crypto_aead_chacha20poly1305_decrypt(plaintext,
+    error_check = crypto_aead_chacha20poly1305_ietf_decrypt(plaintext,
                                                     plaintext_len,
                                                     NULL,
                                                     ciphertext + sizeof(ephemeral_publicKey_signed),
