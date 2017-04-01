@@ -44,7 +44,7 @@
 uint32_t mode = 0;
 
 
-#define MAX_INPUT 32768
+#define MAX_STDIN_INPUT 32768
 
 void dump(unsigned char* data, char* description, int length)
 {
@@ -787,7 +787,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
         }
 
         //Public Key file is specified with "-pub" and the next argument will be the name of the public key file
-        else if(strncmp("-pub", argv[i], 2) == 0)
+        else if(strncmp("-pub", argv[i], 4) == 0)
         {
             if(NULL != argv[i + 1])
             {
@@ -811,7 +811,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
         }
 
         //Secret Key file is specified with "-sec" and the next argument will be the name of the secret key file
-        else if(strncmp("-sec", argv[i], 2) == 0)
+        else if(strncmp("-sec", argv[i], 4) == 0)
         {
             if(NULL != argv[i + 1])
             {
@@ -879,7 +879,7 @@ unsigned long long get_stdin(unsigned char* input, FILE* infile)
     {
         temp = fgetc(infile);
         input[length] = (char) temp;
-        if(length >= MAX_INPUT - 1) break;
+        if(length >= MAX_STDIN_INPUT - 1) break;
         if(temp == EOF) break;
         length++;
     }
