@@ -698,8 +698,14 @@ uint32_t parse_commandline_args(int argc, char* argv[],
     //Check to see if user passed in any command line arguments
     if(1 == argc)
     {
-        print_error("ERROR: No command line arguments passed in\n");
+        print_error("ERROR: No command line arguments passed in");
         return 0xFFFFFFFF;
+    }
+
+    if(strncmp("--version", argv[1], 9) == 0)
+    {
+        print_error("lightcrypt: 0.9");
+        return 0;
     }
 
     //Before doing anything, we must cycle through all the command line arguments to check if we are in script mode
