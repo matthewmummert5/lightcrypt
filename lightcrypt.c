@@ -702,9 +702,10 @@ uint32_t parse_commandline_args(int argc, char* argv[],
         return 0xFFFFFFFF;
     }
 
+    //Check for version command
     if(strncmp("--version", argv[1], 9) == 0)
     {
-        print_error("lightcrypt: 0.9");
+        print_error("lightcrypt: 1.0");
         return 0;
     }
 
@@ -1118,16 +1119,12 @@ int lock_message(unsigned char* ciphertext,
     //shared secret key calculated from Diffie-Hellman Key Exchange
     unsigned char sharedKey[crypto_aead_chacha20poly1305_IETF_KEYBYTES];
 
-    //nonce for the ChaCha20 encryption algorithm
-    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES];
+    //nonce for the ChaCha20 encryption algorithm. Nonce is not cryptographically important in this scheme, so zero it.
+    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES] = {0,0,0,0,0,0,0,0,0,0,0,0};
 
-    //BLAKE2b hash buffer
-    unsigned char hash[crypto_generichash_BYTES_MIN];
 
     int error_check;
 
-    //state of the hash function
-    crypto_generichash_state state;
 
 
     //Generate Alice's ephemeral Diffie-Hellman keypair
@@ -1143,21 +1140,6 @@ int lock_message(unsigned char* ciphertext,
     memcpy(ephemeral_publicKey_signed, signature, crypto_sign_BYTES);
     memcpy((ephemeral_publicKey_signed + crypto_sign_BYTES), ephemeral_publicKey, crypto_box_PUBLICKEYBYTES);
 
-    //Compute the BLAKE2b hash of Bob's and Alice's Diffie-Hellman public keys
-    //We do this in order to deterministically calculate the nonce from this hash
-    crypto_generichash_init(&state, NULL, 0, sizeof(hash));
-    crypto_generichash_update(&state, ephemeral_publicKey, crypto_box_PUBLICKEYBYTES);
-    crypto_generichash_update(&state, Bob_publicKey, crypto_box_PUBLICKEYBYTES);
-    crypto_generichash_final(&state, hash, sizeof(hash));
-
-
-    //Here we take the result of the BLAKE2b hash of Alice's and Bob's public keys
-    //and use the first crypto_aead_chacha20poly1305_IETF_NPUBBYTES bytes of it as
-    //the chacha20 nonce.
-    //This will result in always using the same nonce with the same key,
-    //but this is acceptable because Alice's Diffie-Hellman keys are always
-    //ephemeral. Therefore the key will never be the same for two messages
-    memcpy(nonce, hash, crypto_aead_chacha20poly1305_IETF_NPUBBYTES);
 
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
@@ -1230,17 +1212,10 @@ int unlock_message(unsigned char* plaintext,
     //shared secret key calculated from Diffie-Hellman Key Exchange
     unsigned char sharedKey[crypto_aead_chacha20poly1305_IETF_KEYBYTES];
 
-    //nonce for the ChaCha20 encryption algorithm
-    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES];
-
-    //BLAKE2b hash buffer
-    unsigned char hash[crypto_generichash_BYTES_MIN];
+    //nonce for the ChaCha20 encryption algorithm. Nonce is not cryptographically important in this scheme, so zero it.
+    unsigned char nonce[crypto_aead_chacha20poly1305_IETF_NPUBBYTES] = {0,0,0,0,0,0,0,0,0,0,0,0};
 
     int error_check;
-
-    //state of the hash function
-    crypto_generichash_state state;
-
 
     //Compute Bob's public key given his secret key that we passed in
     crypto_scalarmult_base(Bob_publicKey, Bob_secretKey);
@@ -1258,21 +1233,6 @@ int unlock_message(unsigned char* plaintext,
         print_error("Signature Verification Failed");
         return -1;
     }
-
-    //Compute the BLAKE2b hash of Bob's and Alice's Diffie-Hellman public keys
-    //We do this in order to deterministically calculate the nonce from this hash
-    crypto_generichash_init(&state, NULL, 0, sizeof(hash));
-    crypto_generichash_update(&state, ephemeral_publicKey, crypto_box_PUBLICKEYBYTES);
-    crypto_generichash_update(&state, Bob_publicKey, crypto_box_PUBLICKEYBYTES);
-    crypto_generichash_final(&state, hash, sizeof(hash));
-
-    //Here we take the result of the BLAKE2b hash of Alice's and Bob's public keys
-    //and use the first crypto_aead_chacha20poly1305_IETF_NPUBBYTES bytes of it as
-    //the chacha20 nonce.
-    //This will result in always using the same nonce with the same key,
-    //but this is acceptable because Alice's Diffie-Hellman keys are always
-    //ephemeral. Therefore the key will never be the same for two messages
-    memcpy(nonce, hash, crypto_aead_chacha20poly1305_IETF_NPUBBYTES);
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
     //and computes the shared secret key to be used by Alice and Bob
