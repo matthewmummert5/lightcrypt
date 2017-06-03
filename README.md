@@ -1,31 +1,31 @@
-#README
+# README
 
-##Purpose
+## Purpose
 
 This encryption software is designed to be easily used within a bash script. It's original purpose was to add drop-in authenticated encryption functionality to communication scripts.
 
-##Warning
+## Warning
 This software does not offer forward secrecy. If an attacker obtains your private key, they can decrypt every message ever sent to you and impersonate you in the future.
 
-##Installation Instructions
+## Installation Instructions
 
 This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. Its only dependency besides `gcc` for compiling is `libsodium`. 
 
-###Step 1: Install Dependencies and download software
+### Step 1: Install Dependencies and download software
 Use git to download the software
 ```bash
 #On Debian-based systems, the libsodium library is available in the libsodium-dev package
 sudo apt-get install libsodium-dev
 git clone https://github.com/matthewmummert5/lightcrypt.git
 ```
-###Step 2: Compile
+### Step 2: Compile
 cd into the lightcrypt directory and compile with `gcc`.
 ```bash
 cd lightcrypt
 gcc -lsodium -o lightcrypt lightcrypt.c
 ```
 
-###Step 3 (Optional)
+### Step 3 (Optional)
 If you want to be able to invoke the `lightcrypt` command from anywhere, you should put the executable in the appropriate system directory
 ```bash
 sudo cp lightcrypt /usr/bin
@@ -34,7 +34,7 @@ sudo cp lightcrypt /usr/bin
 
 --------------------------------------------------------------------------------------
 
-##Usage Instructions
+## Usage Instructions
 ```bash
 lightcrypt <Command> -in <Input File> -o <Output File> -pub <Recipient's Public Key File> -sec <Sender's Secret Key File>
 ```
@@ -45,7 +45,7 @@ Users should also be aware that this program is optimized for speed and makes no
 
 The optional `--script` command line argument will put the program in script mode. This means that no error messages will output to the console, but the program will still return a value that you can check with the `$?` variable in bash.
 
-####Program Return Values and Their Meanings
+#### Program Return Values and Their Meanings
 
 | Return Value | Meaning                             |
 | ------------ | ----------------------------------- |
@@ -56,10 +56,10 @@ The optional `--script` command line argument will put the program in script mod
 | 4            | Invalid public key                  |
 | 5            | Not enough memory available         |
 
-###Getting Started
+### Getting Started
 
 
-####Key Generation
+#### Key Generation
 First, you must generate your keys. This action will generate two files. One of them will be a `MyKey.sec` file, and the other will be a `MyKey.pub` file. Send your friend the `.pub` file, but make sure you PROTECT YOUR `.sec` FILES WITH YOUR LIFE. If an attacker obtains your `.sec` file, then they can decrypt anything that has ever been encrypted to you and impersonate you in the future.
 ```bash
 ./lightcrypt -keygen
@@ -67,7 +67,7 @@ First, you must generate your keys. This action will generate two files. One of 
 
 If you wish to rename your files to something easier to keep track of, then do so.
 
-####Encryption
+#### Encryption
 Here is an example of how to encrypt messages that you want to send to Bob.
 ```bash
 ./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -in plaintext_file -o ciphertext_file
@@ -80,7 +80,7 @@ echo "This is a test message" | ./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -
 
 
 
-####Decryption
+#### Decryption
 Here is an example of how to decrypt and verify messages from Bob.
 ```bash
 ./lightcrypt -d -sec MyKey.sec -pub BobKey.pub -in ciphertext_file -o decryptedmessage
@@ -100,7 +100,7 @@ If you know that the message will decrypt to a text output, then you don't need 
 
 
 
-####Notes for Bash Scripting
+#### Notes for Bash Scripting
 This program is designed to be easily bash scripted. The `--script` command line option will supress error messages printing to the console, but will still return an error code which one can check with `$?` in bash. See the table above for the specific error codes.
 
 Some examples:
