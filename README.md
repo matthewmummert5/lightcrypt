@@ -112,10 +112,10 @@ variable=$(./lightcrypt --script -d -in encrypted_message -sec MyKey.sec -pub Bo
 error_code=$?
 
 if [ $error_code -eq 0 ]; then
-   #Decryption was successful
+    #Decryption was successful
 
 else
-	#Handle the errors
+    #Handle the errors
 fi
 
 ```

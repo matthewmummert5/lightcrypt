@@ -40,6 +40,9 @@
 #define SECKEY_SPECIFIED    0x40    //The user has specified a secret key file
 #define SCRIPT_MODE         0x80    //The program will not output errors to the console, but will still return error codes
 
+//Lightcrypt ciphertexts are exactly 112 bytes larger than plaintexts
+#define LIGHTCRYPT_EXTRA_BYTES (crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_IETF_ABYTES)
+
 //Global bitmask for the program's options
 uint32_t mode = 0;
 
@@ -69,7 +72,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
                                 char* Secret_Keyfile);
 
 //This function gets input from stdin
-unsigned long long get_stdin(unsigned char* input, FILE* infile);
+unsigned long long get_stdin(unsigned char* input);
 
 //This function generates user keyfiles. It returns -1 on failure
 int keyFileGen(char* PK_filename, char* SK_filename);
@@ -277,7 +280,7 @@ int main(int argc, char* argv[])
         //else get the input from stdin
         else
         {
-            plaintext_len = get_stdin(input_data, stdin);
+            plaintext_len = get_stdin(input_data);
 
             //Reserve some memory on the heap for the plaintext
             plaintext = malloc(plaintext_len + 1);
@@ -305,7 +308,7 @@ int main(int argc, char* argv[])
         }
 
         //Reserve some memory on the heap for the ciphertext. We need 112 bytes more than the plaintext for the ciphertext
-        ciphertext = malloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_IETF_ABYTES);
+        ciphertext = malloc(plaintext_len + LIGHTCRYPT_EXTRA_BYTES);
 
         //Check to make sure memory allocation was successful
         if(NULL == ciphertext)
@@ -491,7 +494,7 @@ int main(int argc, char* argv[])
         //Else use stdin
         else
         {
-            ciphertext_len = get_stdin(input_data, stdin);
+            ciphertext_len = get_stdin(input_data);
 
             //Reserve some memory on the heap for the ciphertext.
             ciphertext = malloc(ciphertext_len + 1);
@@ -887,7 +890,7 @@ uint32_t parse_commandline_args(int argc, char* argv[],
     return mask;
 }
 
-unsigned long long get_stdin(unsigned char* input, FILE* infile)
+unsigned long long get_stdin(unsigned char* input)
 {
     int temp;
     unsigned long long length = 0;
@@ -897,7 +900,7 @@ unsigned long long get_stdin(unsigned char* input, FILE* infile)
     //There has to be a cleaner way to do this, but this works for now
     while(1)
     {
-        temp = fgetc(infile);
+        temp = fgetc(stdin);
         input[length] = (char) temp;
         if(length >= MAX_STDIN_INPUT - 1) break;
         if(temp == EOF) break;
