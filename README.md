@@ -9,20 +9,19 @@ This software does not offer forward secrecy. If an attacker obtains your privat
 
 ## Installation Instructions
 
-This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. Its only dependency besides `gcc` for compiling is `libsodium`. 
+This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. Its only dependency besides `gcc` for compiling is `libsodium`.
 
 ### Step 1: Install Dependencies and download software
 Use git to download the software
 ```bash
 #On Debian-based systems, the libsodium library is available in the libsodium-dev package
 sudo apt-get install libsodium-dev
-git clone https://github.com/matthewmummert5/lightcrypt.git
+curl https://raw.githubusercontent.com/matthewmummert5/lightcrypt/master/lightcrypt.c > lightcrypt.c
 ```
 ### Step 2: Compile
-cd into the lightcrypt directory and compile with `gcc`.
+Compile with `gcc`.
 ```bash
-cd lightcrypt
-gcc -lsodium -o lightcrypt lightcrypt.c
+gcc -O3 -o lightcrypt lightcrypt.c -lsodium
 ```
 
 ### Step 3 (Optional)
@@ -72,7 +71,7 @@ Here is an example of how to encrypt messages that you want to send to Bob.
 ```bash
 ./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -in plaintext_file -o ciphertext_file
 ```
-Optionally, you don't have to use an input file. If you don't specify one, any input will be captured from `stdin` instead. Here is an example of not using an input file. 
+Optionally, you don't have to use an input file. If you don't specify one, any input will be captured from `stdin` instead. Here is an example of not using an input file.
 
 ```bash
 echo "This is a test message" | ./lightcrypt -e -sec MyKey.sec -pub BobKey.pub -o ciphertext_file
@@ -120,11 +119,3 @@ else
 fi
 
 ```
-
-
-
-
-
-
-
-
