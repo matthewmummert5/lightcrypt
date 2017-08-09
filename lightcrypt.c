@@ -93,8 +93,8 @@ int lock_message(unsigned char* ciphertext,
             unsigned long long* ciphertext_len,
             unsigned char* plaintext,
             unsigned long long plaintext_len,
-            unsigned char* Bob_publicKey,
-            unsigned char* Alice_signKey);
+            unsigned char* Recipient_publicKey,
+            unsigned char* Sender_signKey);
 
 //This function verifies and decrypts a message that was locked with 'lock_message()'
 //First, it verifies the signed ephemeral Diffie-Hellman public key to verify the sender's
@@ -104,8 +104,8 @@ int unlock_message(unsigned char* plaintext,
                 unsigned long long* plaintext_len,
                 unsigned char* ciphertext,
                 unsigned long long ciphertext_len,
-                unsigned char* Alice_publicSignKey,
-                unsigned char* Bob_secretKey);
+                unsigned char* Sender_publicSignKey,
+                unsigned char* Recipient_secretKey);
 
 int main(int argc, char* argv[])
 {
@@ -1113,20 +1113,20 @@ int lock_message(unsigned char* ciphertext,
             unsigned long long * ciphertext_len,
             unsigned char* plaintext,
             unsigned long long plaintext_len,
-            unsigned char* Bob_publicKey,
-            unsigned char* Alice_signKey)
+            unsigned char* Recipient_publicKey,
+            unsigned char* Sender_signKey)
 {
     //ephemeral Diffie-Hellman keypair to be generated on-the-fly
     unsigned char ephemeral_publicKey[crypto_box_PUBLICKEYBYTES];
     unsigned char ephemeral_secretKey[crypto_box_SECRETKEYBYTES];
 
-    //ephemeral Diffie-Hellman public key that is signed by Alice's signature key
+    //ephemeral Diffie-Hellman public key that is signed by Sender's signature key
     unsigned char ephemeral_publicKey_signed[crypto_box_PUBLICKEYBYTES + crypto_sign_BYTES];
 
-    //The detached signature of Alice's ephemeral Diffie-Hellman keypair
+    //The detached signature of Sender's ephemeral Diffie-Hellman keypair
     unsigned char signature[crypto_sign_BYTES];
 
-    //length of the signature on Alice's ephemeral Diffie-Hellman keypair
+    //length of the signature on Sender's ephemeral Diffie-Hellman keypair
     unsigned long long siglen;
 
     //shared secret key calculated from Diffie-Hellman Key Exchange
@@ -1140,24 +1140,24 @@ int lock_message(unsigned char* ciphertext,
 
 
 
-    //Generate Alice's ephemeral Diffie-Hellman keypair
+    //Generate Sender's ephemeral Diffie-Hellman keypair
     crypto_box_keypair(ephemeral_publicKey, ephemeral_secretKey);
 
-    //Sign Alice's ephemeral Diffie-Hellman public key so that the recipient can verify that the locked message is from Alice
-    //This function will sign 'ephemeral_publicKey' with 'Alice_signKey', and place the signature in 'signature'
+    //Sign Sender's ephemeral Diffie-Hellman public key so that the recipient can verify that the locked message is from Sender
+    //This function will sign 'ephemeral_publicKey' with 'Sender_signKey', and place the signature in 'signature'
     //We can safely ignore 'siglen' and assume the signature will always be crypto_sign_BYTES long because
     //crypto_sign_detached() will zero-pad shorter signatures if necessary
-    crypto_sign_detached(signature, &siglen, ephemeral_publicKey, crypto_box_PUBLICKEYBYTES, Alice_signKey);
+    crypto_sign_detached(signature, &siglen, ephemeral_publicKey, crypto_box_PUBLICKEYBYTES, Sender_signKey);
 
-    //Use pointer arithmetic to prepend the signature to Alice's ephemeral Diffie-Hellman public key.
+    //Use pointer arithmetic to prepend the signature to Sender's ephemeral Diffie-Hellman public key.
     memcpy(ephemeral_publicKey_signed, signature, crypto_sign_BYTES);
     memcpy((ephemeral_publicKey_signed + crypto_sign_BYTES), ephemeral_publicKey, crypto_box_PUBLICKEYBYTES);
 
 
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
-    //and computes the shared secret key to be used by Alice and Bob
-    error_check = crypto_box_beforenm(sharedKey, Bob_publicKey, ephemeral_secretKey);
+    //and computes the shared secret key to be used by Sender and Recipient
+    error_check = crypto_box_beforenm(sharedKey, Recipient_publicKey, ephemeral_secretKey);
     if(0 != error_check)
     {
         //Diffie-Hellman Key Exchange somehow failed
@@ -1171,7 +1171,7 @@ int lock_message(unsigned char* ciphertext,
 
 
     //This function uses the ChaCha20 stream cipher to encrypt the plaintext.
-    //It also uses poly1305 to authenticate the ciphertext and Alice's signed ephemeral Diffie-Hellman public key
+    //It also uses poly1305 to authenticate the ciphertext and Sender's signed ephemeral Diffie-Hellman public key
     crypto_aead_chacha20poly1305_ietf_encrypt(ciphertext + sizeof(ephemeral_publicKey_signed),
                                         ciphertext_len,
                                         plaintext,
@@ -1182,7 +1182,7 @@ int lock_message(unsigned char* ciphertext,
                                         nonce,
                                         sharedKey);
 
-    //Now we prepend Alice's signed Diffie-Hellman public key to the authenticated and encrypted message
+    //Now we prepend Sender's signed Diffie-Hellman public key to the authenticated and encrypted message
     memcpy(ciphertext, ephemeral_publicKey_signed, sizeof(ephemeral_publicKey_signed));
 
 
@@ -1207,19 +1207,19 @@ int unlock_message(unsigned char* plaintext,
                 unsigned long long* plaintext_len,
                 unsigned char* ciphertext,
                 unsigned long long ciphertext_len,
-                unsigned char* Alice_publicSignKey,
-                unsigned char* Bob_secretKey)
+                unsigned char* Sender_publicSignKey,
+                unsigned char* Recipient_secretKey)
 {
     //ephemeral Diffie-Hellman keypair to be generated on-the-fly
     unsigned char ephemeral_publicKey[crypto_box_PUBLICKEYBYTES];
 
-    //Bob's Diffie-Hellman public key. This will be calculated from his secret key
-    unsigned char Bob_publicKey[crypto_box_PUBLICKEYBYTES];
+    //Recipient's Diffie-Hellman public key. This will be calculated from his secret key
+    unsigned char Recipient_publicKey[crypto_box_PUBLICKEYBYTES];
 
-    //ephemeral Diffie-Hellman public key that is signed by Alice's signature key
+    //ephemeral Diffie-Hellman public key that is signed by Sender's signature key
     unsigned char ephemeral_publicKey_signed[crypto_box_PUBLICKEYBYTES + crypto_sign_BYTES];
 
-    //The detached signature of Alice's ephemeral Diffie-Hellman keypair
+    //The detached signature of Sender's ephemeral Diffie-Hellman keypair
     unsigned char signature[crypto_sign_BYTES];
 
     //shared secret key calculated from Diffie-Hellman Key Exchange
@@ -1230,17 +1230,17 @@ int unlock_message(unsigned char* plaintext,
 
     int error_check;
 
-    //Compute Bob's public key given his secret key that we passed in
-    crypto_scalarmult_base(Bob_publicKey, Bob_secretKey);
+    //Compute Recipient's public key given his secret key that we passed in
+    crypto_scalarmult_base(Recipient_publicKey, Recipient_secretKey);
 
-    //Use clever pointer arithmetic to get Alice's signed ephemeral
+    //Use clever pointer arithmetic to get Sender's signed ephemeral
     //public key out of the beginning of the ciphertext
     memcpy(ephemeral_publicKey_signed, ciphertext, sizeof(ephemeral_publicKey_signed));
     memcpy(ephemeral_publicKey, ephemeral_publicKey_signed + crypto_sign_BYTES, crypto_box_PUBLICKEYBYTES);
     memcpy(signature, ephemeral_publicKey_signed, crypto_sign_BYTES);
 
-    //Now, we verify the signature on Alice's ephemeral Diffie-Hellman public key
-    error_check = crypto_sign_verify_detached(signature, ephemeral_publicKey, sizeof(ephemeral_publicKey), Alice_publicSignKey);
+    //Now, we verify the signature on Sender's ephemeral Diffie-Hellman public key
+    error_check = crypto_sign_verify_detached(signature, ephemeral_publicKey, sizeof(ephemeral_publicKey), Sender_publicSignKey);
     if(0 != error_check)
     {
         print_error("Signature Verification Failed");
@@ -1248,8 +1248,8 @@ int unlock_message(unsigned char* plaintext,
     }
 
     //This function performs a Diffie-Hellman Key Exchange over Curve25519
-    //and computes the shared secret key to be used by Alice and Bob
-    error_check = crypto_box_beforenm(sharedKey, ephemeral_publicKey, Bob_secretKey);
+    //and computes the shared secret key to be used by Sender and Recipient
+    error_check = crypto_box_beforenm(sharedKey, ephemeral_publicKey, Recipient_secretKey);
     if(0 != error_check)
     {
         //Diffie-Hellman Key Exchange somehow failed
@@ -1258,7 +1258,7 @@ int unlock_message(unsigned char* plaintext,
     }
 
 
-    //This function verifies the poly1305 MAC computed over Alice's signed ephemeral Diffie-Hellman public key
+    //This function verifies the poly1305 MAC computed over Sender's signed ephemeral Diffie-Hellman public key
     //and the ciphertext, then it decrypts the ChaCha20 encrypted message. It returns -1 if verification fails
     error_check = crypto_aead_chacha20poly1305_ietf_decrypt(plaintext,
                                                     plaintext_len,
