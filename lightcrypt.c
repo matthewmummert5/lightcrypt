@@ -135,8 +135,8 @@ int main(int argc, char* argv[])
     char Secret_Keyfile[128];
     char Public_Keyfile[128];
 
-    unsigned long long ciphertext_len;
-    unsigned long long plaintext_len;
+    unsigned long long ciphertext_len = 0;
+    unsigned long long plaintext_len = 0;
 
     int error_check;
 
@@ -250,7 +250,7 @@ int main(int argc, char* argv[])
             fseek(inputFile_fp, 0, SEEK_SET);       //Seek back to the beginning of the file
 
             //Reserve some memory on the heap for the plaintext
-            plaintext = calloc(plaintext_len, sizeof(char));
+            plaintext = malloc(plaintext_len + 1);
 
             //Check to make sure memory allocation was successful
             if(NULL == plaintext)
@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
             plaintext_len = get_stdin(input_data, stdin);
 
             //Reserve some memory on the heap for the plaintext
-            plaintext = calloc(plaintext_len, sizeof(char));
+            plaintext = malloc(plaintext_len + 1);
 
             //Check to make sure memory allocation was successful
             if(NULL == plaintext)
@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
         }
 
         //Reserve some memory on the heap for the ciphertext. We need 112 bytes more than the plaintext for the ciphertext
-        ciphertext = calloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_IETF_ABYTES, sizeof(char));
+        ciphertext = malloc(plaintext_len + crypto_sign_BYTES + crypto_box_PUBLICKEYBYTES + crypto_aead_chacha20poly1305_IETF_ABYTES);
 
         //Check to make sure memory allocation was successful
         if(NULL == ciphertext)
@@ -463,7 +463,7 @@ int main(int argc, char* argv[])
             fseek(inputFile_fp, 0, SEEK_SET);       //Seek back to the beginning of the file
 
             //Reserve some memory on the heap for the ciphertext.
-            ciphertext = calloc(ciphertext_len, sizeof(char));
+            ciphertext = malloc(ciphertext_len + 1);
 
             //Check to make sure memory allocation was successful
             if(NULL == ciphertext)
@@ -494,7 +494,7 @@ int main(int argc, char* argv[])
             ciphertext_len = get_stdin(input_data, stdin);
 
             //Reserve some memory on the heap for the ciphertext.
-            ciphertext = calloc(ciphertext_len, sizeof(char));
+            ciphertext = malloc(ciphertext_len + 1);
 
             //Check to make sure memory allocation was successful
             if(NULL == ciphertext)
@@ -519,7 +519,7 @@ int main(int argc, char* argv[])
         }
 
         //Allocate some memory on the heap for the plaintext
-        plaintext = calloc(ciphertext_len, sizeof(char));
+        plaintext = malloc(ciphertext_len + 1);
 
         //Check to make sure memory allocation was successful
         if(NULL == plaintext)
@@ -550,6 +550,19 @@ int main(int argc, char* argv[])
             //Signature or MAC verification failure
             //Return error code 2
             print_error("Cryptographic Verification failed");
+            sodium_memzero(plaintext, plaintext_len);
+            sodium_memzero(ciphertext, ciphertext_len);
+            sodium_memzero(Sender_publicKey, sizeof(Sender_publicKey));
+            sodium_memzero(Sender_secretKey, sizeof(Sender_secretKey));
+            sodium_memzero(Recipient_publicKey, sizeof(Recipient_publicKey));
+            sodium_memzero(Recipient_secretKey, sizeof(Recipient_secretKey));
+            sodium_memzero(Sender_publicSignKey, sizeof(Sender_publicSignKey));
+            sodium_memzero(Sender_secretSignKey, sizeof(Sender_secretSignKey));
+            sodium_memzero(Recipient_publicSignKey, sizeof(Recipient_publicSignKey));
+            sodium_memzero(Recipient_secretSignKey, sizeof(Recipient_secretSignKey));
+            sodium_memzero(input_data, sizeof(input_data));
+            free(plaintext);
+            free(ciphertext);
             return 1;
         }
 
