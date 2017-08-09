@@ -12,7 +12,7 @@ This software does not offer forward secrecy. If an attacker obtains your privat
 This program runs on a unix-like system, however it may be possible to compile on Windows. `lightcrypt` was designed to be easy to compile, so the entire program consists of a single `.c` file. Its only dependency besides `gcc` for compiling is `libsodium`.
 
 ### Step 1: Install Dependencies and download software
-Use git to download the software
+Use curl to download the software
 ```bash
 #On Debian-based systems, the libsodium library is available in the libsodium-dev package
 sudo apt-get install libsodium-dev
